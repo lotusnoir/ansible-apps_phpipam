@@ -1,0 +1,33 @@
+---
+- name: Prepare
+  hosts: all
+  gather_facts: true
+  pre_tasks:
+    - name: Update apt cache.
+      apt: update_cache=yes cache_valid_time=600
+      when: ansible_os_family == 'Debian'
+      changed_when: false
+
+  roles:
+    - role: geerlingguy.mysql
+    - role: geerlingguy.nginx
+  vars:
+    nginx_remove_default_vhost: true
+    nginx_vhosts:
+      - server_name: "localhost"
+        listen: "80"
+        extra_parameters: |
+          root   /var/www/html/phpipam;
+          index  index.php;
+
+          location /api/ {
+              try_files $uri /api/index.php;
+          }
+          location ~ \.php$ {
+              try_files $uri =404;
+              fastcgi_pass   unix:/run/php/php7.4-fpm.sock;
+              fastcgi_buffer_size 32K;
+              fastcgi_buffers 64 32k;
+              fastcgi_param  SCRIPT_FILENAME $request_filename;
+              include        fastcgi_params;
+          }
