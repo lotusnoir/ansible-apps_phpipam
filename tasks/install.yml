@@ -1,56 +1,58 @@
 ---
 - name: "Check for phpipam installation"
-  stat:
+  ansible.builtin.stat:
     path: '{{ phpipam_root }}/config.php'
   changed_when: false
   register: phpipam_install
 
-- when: not phpipam_install.stat.exists or phpipam_force_install|bool
+- name: "Install tasks"
+  when: not phpipam_install.stat.exists or phpipam_force_install|bool
   block:
-    - name: Install requirements
-      package:
+    - name: "Install requirements"
+      ansible.builtin.package:
         name: "{{ item }}"
         state: present
       with_items:
         - "{{ phpipam_requirements }}"
 
-    - name: Downloading phpipam {{ phpipam_version }}
-      get_url:
+    - name: "Downloading phpipam {{ phpipam_version }}"
+      ansible.builtin.get_url:
         url: "{{ phpipam_download }}"
         dest: "/opt/{{ phpipam_download_file }}"
+        mode: '0644'
 
-    - name: Extracting phpipam package to {{ web_root }}
-      unarchive:
+    - name: "Extracting phpipam package to {{ web_root }}"
+      ansible.builtin.unarchive:
         src: "/opt/{{ phpipam_download_file }}"
         dest: "{{ web_root }}"
         owner: "{{ web_owner }}"
         group: "{{ web_group }}"
         remote_src: true
 
-    - name: Importing phpipam basic database
-      mysql_db:
+    - name: "Importing phpipam basic database"
+      community.mysql.mysql_db:
         name: "{{ phpipam_db_name }}"
         state: import
         target: "{{ phpipam_root }}/db/SCHEMA.sql"
       when: phpipam_db_custom_path|length == 0
 
     - name: "Copy custom config files"
-      copy:
+      ansible.builtin.copy:
         src: '{{ phpipam_db_custom_path }}'
         dest: '{{ phpipam_root }}/db/phpipam.sql'
         owner: "{{ web_owner }}"
         group: "{{ web_group }}"
         mode: '0644'
 
-    - name: Importing phpipam custom database
-      mysql_db:
+    - name: "Importing phpipam custom database"
+      community.mysql.mysql_db:
         name: "{{ phpipam_db_name }}"
         state: import
         target: "{{ phpipam_root }}/db/phpipam.sql"
       when: phpipam_db_custom_path|length > 0
 
-- name: Creating phpipam web config
-  template:
+- name: "Creating phpipam web config"
+  ansible.builtin.template:
     src: "config.php.j2"
     dest: "{{ phpipam_root }}/config.php"
     owner: "{{ web_owner }}"
@@ -59,7 +61,7 @@
     backup: true
 
 - name: Tweak php-fpm vars
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: /etc/php/7.4/fpm/pool.d/www.conf
     regexp: "{{ item.regexp }}"
     line: "{{ item.line }}"
@@ -74,7 +76,7 @@
 
 ## need to validate this is still needed as versions change
 #- name: config_phpipam | patching functions-network.php
-#  template:
+#  ansible.builtin.template:
 #    src: "functions/functions-network.php.j2"
 #    dest: "{{ phpipam_root }}/functions/functions-network.php"
 #    owner: "{{ web_owner }}"
@@ -85,7 +87,7 @@
 #
 ## need to validate this is still needed as versions change
 #- name: config_phpipam | patching email
-#  template:
+#  ansible.builtin.template:
 #    src: "functions/functions-mail.php.j2"
 #    dest: "{{ phpipam_root }}/functions/functions-mail.php"
 #    owner: "{{ web_owner }}"
@@ -96,7 +98,7 @@
 #
 ## need to validate this is still needed as versions change
 #- name: config_phpipam | patching email
-#  template:
+#  ansible.builtin.template:
 #    src: "site/admin/mailSettingsTestMail.php.j2"
 #    dest: "{{ phpipam_root }}/site/admin/mailSettingsTestMail.php"
 #    owner: "{{ web_owner }}"
@@ -107,7 +109,7 @@
 #
 ## need to validate this is still needed as versions change
 #- name: config_phpipam | adding dnsCheck.php script
-#  template:
+#  ansible.builtin.template:
 #    src: "functions/scripts/dnsCheck.php.j2"
 #    dest: "{{ phpipam_root }}/functions/scripts/dnsCheck.php"
 #    owner: "{{ web_owner }}"
@@ -119,13 +121,13 @@
 #
 ## need to validate this is still needed as versions change
 #- name: config_phpipam | checking for fping path
-#  command: which fping
+#  ansible.builtin.command: which fping
 #  register: fping_path
 #  changed_when: false
 #
 ## need to validate this is still needed as versions change
 #- name: config_phpipam | adding fpingDiscovery script(s)
-#  template:
+#  ansible.builtin.template:
 #    src: "functions/scripts/{{ item }}.j2"
 #    dest: "{{ phpipam_root }}/functions/scripts/{{ item }}"
 #    owner: "{{ web_owner }}"
@@ -139,7 +141,7 @@
 #        phpipam_patch_discovery
 #
 #- name: config_phpipam | Ensuring Permissions Are Correctly Set
-#  file:
+#  ansible.builtin.file:
 #    path: "{{ phpipam_root }}"
 #    group: "{{ web_group }}"
 #    owner: "{{ web_owner }}"
@@ -148,7 +150,7 @@
 #  when: phpipam_install_from_git # Only run when is not coming from git
 
 - name: config_phpipam | Ensuring Permissions Are Correctly Set
-  file:
+  ansible.builtin.file:
     path: "{{ phpipam_root }}"
     group: "{{ web_group }}"
     owner: "{{ web_owner }}"
@@ -157,7 +159,7 @@
 
 
 #- name: Adding cron job for discoveryCheck
-#  cron:
+#  ansible.builtin.cron:
 #    name: phpipam discoveryCheck
 #    job: "/usr/bin/php {{ phpipam_root }}/functions/scripts/discoveryCheck.php"
 #    minute: "*/15"
@@ -170,7 +172,7 @@
 #  when: phpipam_define_cron_jobs
 
 - name: Ading cron job for pingCheck
-  cron:
+  ansible.builtin.cron:
     name: phpipam pingCheck
     job: "/usr/bin/php {{ phpipam_root }}/functions/scripts/pingCheck.php"
     minute: "*/15"
@@ -183,7 +185,7 @@
   when: phpipam_define_cron_jobs
 
 #- name: Aadding cron job for resolveIPaddresses
-#  cron:
+#  ansible.builtin.cron:
 #    name: phpipam resolveIPaddresses
 #    job: "/usr/bin/php {{ phpipam_root }}/functions/scripts/resolveIPaddresses.php"
 #    minute: "0"
