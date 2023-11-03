@@ -5,10 +5,10 @@ phpipam_download: "https://github.com/phpipam/phpipam/releases/download/v{{ phpi
 phpipam_download_file: 'phpipam-v{{ phpipam_version }}.tgz'
 
 ### Install
-web_group: "www-data"
-web_owner: "www-data"
-web_root: '/var/www/html'
-phpipam_root: '{{ web_root }}/phpipam'
+phpipam_web_group: "www-data"
+phpipam_web_owner: "www-data"
+phpipam_web_root: '/var/www/html'
+phpipam_root: '{{ phpipam_web_root }}/phpipam'
 phpipam_db_custom_path: ""
 phpipam_force_install: false
 

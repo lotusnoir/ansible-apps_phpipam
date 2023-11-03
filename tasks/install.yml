@@ -13,11 +13,11 @@
         name: "{{ phpipam_requirements }}"
         state: present
 
-    - name: "Ensure {{ web_root }} exist"
+    - name: "Ensure {{ phpipam_web_root }} exist"
       ansible.builtin.file:
-        path: "{{ web_root }}"
-        owner: "{{ web_owner }}"
-        group: "{{ web_group }}"
+        path: "{{ phpipam_web_root }}"
+        owner: "{{ phpipam_web_owner }}"
+        group: "{{ phpipam_web_group }}"
         mode: 0755
         state: directory
 
@@ -27,12 +27,12 @@
         dest: "/opt/{{ phpipam_download_file }}"
         mode: '0644'
 
-    - name: "Extracting phpipam package to {{ web_root }}"
+    - name: "Extracting phpipam package to {{ phpipam_web_root }}"
       ansible.builtin.unarchive:
         src: "/opt/{{ phpipam_download_file }}"
-        dest: "{{ web_root }}"
-        owner: "{{ web_owner }}"
-        group: "{{ web_group }}"
+        dest: "{{ phpipam_web_root }}"
+        owner: "{{ phpipam_web_owner }}"
+        group: "{{ phpipam_web_group }}"
         remote_src: true
 
     - name: "Importing phpipam basic database"
@@ -47,8 +47,8 @@
       ansible.builtin.copy:
         src: '{{ phpipam_db_custom_path }}'
         dest: '{{ phpipam_root }}/db/phpipam.sql'
-        owner: "{{ web_owner }}"
-        group: "{{ web_group }}"
+        owner: "{{ phpipam_web_owner }}"
+        group: "{{ phpipam_web_group }}"
         mode: '0644'
       when: phpipam_db_custom_path is defined and phpipam_db_custom_path|length > 0
 
@@ -63,8 +63,8 @@
   ansible.builtin.template:
     src: "config.php.j2"
     dest: "{{ phpipam_root }}/config.php"
-    owner: "{{ web_owner }}"
-    group: "{{ web_group }}"
+    owner: "{{ phpipam_web_owner }}"
+    group: "{{ phpipam_web_group }}"
     mode: '0644'
     backup: true
 
@@ -87,8 +87,8 @@
 #  ansible.builtin.template:
 #    src: "functions/functions-network.php.j2"
 #    dest: "{{ phpipam_root }}/functions/functions-network.php"
-#    owner: "{{ web_owner }}"
-#    group: "{{ web_group }}"
+#    owner: "{{ phpipam_web_owner }}"
+#    group: "{{ phpipam_web_group }}"
 #  when: >
 #        phpipam_patch_discovery is defined and
 #        phpipam_patch_discovery
@@ -98,8 +98,8 @@
 #  ansible.builtin.template:
 #    src: "functions/functions-mail.php.j2"
 #    dest: "{{ phpipam_root }}/functions/functions-mail.php"
-#    owner: "{{ web_owner }}"
-#    group: "{{ web_group }}"
+#    owner: "{{ phpipam_web_owner }}"
+#    group: "{{ phpipam_web_group }}"
 #  when: >
 #        phpipam_patch_email is defined and
 #        phpipam_patch_email
@@ -109,8 +109,8 @@
 #  ansible.builtin.template:
 #    src: "site/admin/mailSettingsTestMail.php.j2"
 #    dest: "{{ phpipam_root }}/site/admin/mailSettingsTestMail.php"
-#    owner: "{{ web_owner }}"
-#    group: "{{ web_group }}"
+#    owner: "{{ phpipam_web_owner }}"
+#    group: "{{ phpipam_web_group }}"
 #  when: >
 #        phpipam_patch_email is defined and
 #        phpipam_patch_email
@@ -120,8 +120,8 @@
 #  ansible.builtin.template:
 #    src: "functions/scripts/dnsCheck.php.j2"
 #    dest: "{{ phpipam_root }}/functions/scripts/dnsCheck.php"
-#    owner: "{{ web_owner }}"
-#    group: "{{ web_group }}"
+#    owner: "{{ phpipam_web_owner }}"
+#    group: "{{ phpipam_web_group }}"
 #    mode: 0755
 #  when: >
 #        phpipam_patch_discovery is defined and
@@ -138,8 +138,8 @@
 #  ansible.builtin.template:
 #    src: "functions/scripts/{{ item }}.j2"
 #    dest: "{{ phpipam_root }}/functions/scripts/{{ item }}"
-#    owner: "{{ web_owner }}"
-#    group: "{{ web_group }}"
+#    owner: "{{ phpipam_web_owner }}"
+#    group: "{{ phpipam_web_group }}"
 #    mode: 0755
 #  with_items:
 #    - fpingDiscoveryCheck.php
@@ -151,8 +151,8 @@
 #- name: config_phpipam | Ensuring Permissions Are Correctly Set
 #  ansible.builtin.file:
 #    path: "{{ phpipam_root }}"
-#    group: "{{ web_group }}"
-#    owner: "{{ web_owner }}"
+#    group: "{{ phpipam_web_group }}"
+#    owner: "{{ phpipam_web_owner }}"
 #    state: "directory"
 #    recurse: yes
 #  when: phpipam_install_from_git # Only run when is not coming from git
@@ -160,8 +160,8 @@
 - name: config_phpipam | Ensuring Permissions Are Correctly Set
   ansible.builtin.file:
     path: "{{ phpipam_root }}"
-    group: "{{ web_group }}"
-    owner: "{{ web_owner }}"
+    group: "{{ phpipam_web_group }}"
+    owner: "{{ phpipam_web_owner }}"
     state: "directory"
     recurse: true
 
@@ -174,7 +174,7 @@
 #    hour: "*"
 #    day: "*"
 #    month: "*"
-#    user: "{{ web_owner }}"
+#    user: "{{ phpipam_web_owner }}"
 #    cron_file: phpipam_discoveryCheck
 #    state: present
 #  when: phpipam_define_cron_jobs
@@ -187,7 +187,7 @@
     hour: "*"
     day: "*"
     month: "*"
-    user: "{{ web_owner }}"
+    user: "{{ phpipam_web_owner }}"
     cron_file: phpipam_pingCheck
     state: present
   when: phpipam_define_cron_jobs
@@ -200,7 +200,7 @@
 #    hour: "*"
 #    day: "*"
 #    month: "*"
-#    user: "{{ web_owner }}"
+#    user: "{{ phpipam_web_owner }}"
 #    cron_file: phpipam_resolveIPaddresses
 #    state: present
 #  when: phpipam_define_cron_jobs
