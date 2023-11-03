@@ -10,10 +10,16 @@
   block:
     - name: "Install requirements"
       ansible.builtin.package:
-        name: "{{ item }}"
+        name: "{{ phpipam_requirements }}"
         state: present
-      with_items:
-        - "{{ phpipam_requirements }}"
+
+    - name: "Ensure {{ web_root }} exist"
+      ansible.builtin.file:
+        path: "{{ web_root }}"
+        owner: "{{ web_owner }}"
+        group: "{{ web_group }}"
+        mode: 0755
+        state: directory
 
     - name: "Downloading phpipam {{ phpipam_version }}"
       ansible.builtin.get_url:
@@ -34,6 +40,7 @@
         name: "{{ phpipam_db_name }}"
         state: import
         target: "{{ phpipam_root }}/db/SCHEMA.sql"
+        force: true
       when: phpipam_db_custom_path|length == 0
 
     - name: "Copy custom config files"
@@ -43,13 +50,14 @@
         owner: "{{ web_owner }}"
         group: "{{ web_group }}"
         mode: '0644'
+      when: phpipam_db_custom_path is defined and phpipam_db_custom_path|length > 0
 
     - name: "Importing phpipam custom database"
       community.mysql.mysql_db:
         name: "{{ phpipam_db_name }}"
         state: import
         target: "{{ phpipam_root }}/db/phpipam.sql"
-      when: phpipam_db_custom_path|length > 0
+      when: phpipam_db_custom_path is defined and phpipam_db_custom_path|length > 0
 
 - name: "Creating phpipam web config"
   ansible.builtin.template:
@@ -62,7 +70,7 @@
 
 - name: Tweak php-fpm vars
   ansible.builtin.lineinfile:
-    dest: /etc/php/7.4/fpm/pool.d/www.conf
+    dest: "/etc/php/{{ phpipam_php_version }}/fpm/pool.d/www.conf"
     regexp: "{{ item.regexp }}"
     line: "{{ item.line }}"
     state: present

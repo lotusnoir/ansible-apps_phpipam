@@ -18,4 +18,6 @@ phpipam_db_name: 'phpipam'
 phpipam_db_pass: phpipam
 phpipam_db_user: phpipam
 
+phpipam_php_version: "8.2"
+
 phpipam_define_cron_jobs: true
