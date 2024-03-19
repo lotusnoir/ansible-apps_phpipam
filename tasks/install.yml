@@ -13,7 +13,7 @@
         name: "{{ phpipam_requirements }}"
         state: present
 
-    - name: "Ensure {{ phpipam_web_root }} exist"
+    - name: "Ensure webroot exist"
       ansible.builtin.file:
         path: "{{ phpipam_web_root }}"
         owner: "{{ phpipam_web_owner }}"
@@ -80,7 +80,7 @@
     - {regexp: "^pm.min_spare_servers =", line: "pm.min_spare_servers = 15"}
     - {regexp: "^pm.max_spare_servers =", line: "pm.max_spare_servers = 25"}
     - {regexp: "^pm.max_requests =", line: "pm.max_requests = 500"}
-  notify: restart php-fpm
+  notify: Restart php-fpm
 
 ## need to validate this is still needed as versions change
 #- name: config_phpipam | patching functions-network.php
@@ -157,7 +157,7 @@
 #    recurse: yes
 #  when: phpipam_install_from_git # Only run when is not coming from git
 
-- name: config_phpipam | Ensuring Permissions Are Correctly Set
+- name: Config_phpipam | Ensuring Permissions Are Correctly Set
   ansible.builtin.file:
     path: "{{ phpipam_root }}"
     group: "{{ phpipam_web_group }}"

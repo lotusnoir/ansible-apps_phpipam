@@ -7,15 +7,24 @@
 [![Ansible Quality Score](https://img.shields.io/ansible/quality/52262)](https://galaxy.ansible.com/lotusnoir/apps_phpipam)
 [![License](https://img.shields.io/badge/license-Apache--2.0-brightgreen?style=flat)](https://opensource.org/licenses/Apache-2.0)
 
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+- [Description](#description)
+- [Requirements](#requirements)
+- [Role variables](#role-variables)
+- [Examples](#examples)
+- [License](#license)
+- [Author Information](#author-information)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 ## Description
 
 Deploy and install the ipam web tool [phpipam](https://github.com/momorientes/phpipam).
 ## Requirements
 
-You need to install:
-  - a mysql database - geerlingguy.mysql
-  - a web server - geerlingguy.nginx
-
+none
 
 ## Role variables
 
