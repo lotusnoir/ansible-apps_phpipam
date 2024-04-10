@@ -24,7 +24,10 @@
 Deploy and install the ipam web tool [phpipam](https://github.com/momorientes/phpipam).
 ## Requirements
 
-none
+You need to install:
+  - a mysql database - geerlingguy.mysql
+  - a web server - geerlingguy.nginx
+
 
 ## Role variables
 
