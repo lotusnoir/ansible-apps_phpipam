@@ -12,13 +12,17 @@
       ansible.builtin.package:
         name: "{{ phpipam_requirements }}"
         state: present
+      register: pkg_result
+      retries: 12
+      delay: 10
+      until: pkg_result is success
 
     - name: "Ensure webroot exist"
       ansible.builtin.file:
         path: "{{ phpipam_web_root }}"
         owner: "{{ phpipam_web_owner }}"
         group: "{{ phpipam_web_group }}"
-        mode: 0755
+        mode: '0755'
         state: directory
 
     - name: "Downloading phpipam {{ phpipam_version }}"
