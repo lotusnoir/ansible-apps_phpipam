@@ -7,19 +7,19 @@
       ansible.builtin.apt:
         update_cache: true
         cache_valid_time: 600
+      register: apt_update
+      until: apt_update is succeeded
+      retries: 3
+      delay: 10
       when: ansible_os_family == 'Debian'
-      changed_when: false
 
     - name: Start dbus for oraclelinux9
       ansible.builtin.systemd:
         name: dbus
         state: started
         enabled: true
-      when: ansible_os_family == 'RedHat' and ansible_distribution_major_version == "9"
+      when: ansible_os_family == 'RedHat' and (ansible_distribution_major_version | int) >= 9
 
-  roles:
-    - role: geerlingguy.mysql
-    - role: geerlingguy.nginx
   vars:
     nginx_remove_default_vhost: true
     nginx_vhosts:
@@ -40,3 +40,7 @@
               fastcgi_param  SCRIPT_FILENAME $request_filename;
               include        fastcgi_params;
           }
+
+  roles:
+    - role: geerlingguy.mysql
+    - role: geerlingguy.nginx

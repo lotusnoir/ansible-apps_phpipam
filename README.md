@@ -22,12 +22,10 @@
 ## Description
 
 Deploy and install the ipam web tool [phpipam](https://github.com/momorientes/phpipam).
+
 ## Requirements
 
-You need to install:
-  - a mysql database - geerlingguy.mysql
-  - a web server - geerlingguy.nginx
-
+['geerlingguy.mysql', 'geerlingguy.nginx']
 
 ## Role variables
 
@@ -42,7 +40,6 @@ See [variables](/defaults/main.yml) for more details.
           gather_facts: true
           roles:
             - role: ansible-apps_phpipam
-
 
 ## License
 

@@ -12,10 +12,10 @@
       ansible.builtin.package:
         name: "{{ phpipam_requirements }}"
         state: present
-      register: pkg_result
+      register: __pkg_result
       retries: 12
       delay: 10
-      until: pkg_result is success
+      until: __pkg_result is success
 
     - name: "Ensure webroot exist"
       ansible.builtin.file:
@@ -87,79 +87,79 @@
   notify: Restart php-fpm
 
 ## need to validate this is still needed as versions change
-#- name: config_phpipam | patching functions-network.php
-#  ansible.builtin.template:
-#    src: "functions/functions-network.php.j2"
-#    dest: "{{ phpipam_root }}/functions/functions-network.php"
-#    owner: "{{ phpipam_web_owner }}"
-#    group: "{{ phpipam_web_group }}"
-#  when: >
-#        phpipam_patch_discovery is defined and
-#        phpipam_patch_discovery
+# - name: config_phpipam | patching functions-network.php
+#   ansible.builtin.template:
+#     src: "functions/functions-network.php.j2"
+#     dest: "{{ phpipam_root }}/functions/functions-network.php"
+#     owner: "{{ phpipam_web_owner }}"
+#     group: "{{ phpipam_web_group }}"
+#   when: >
+#         phpipam_patch_discovery is defined and
+#         phpipam_patch_discovery
 #
 ## need to validate this is still needed as versions change
-#- name: config_phpipam | patching email
-#  ansible.builtin.template:
-#    src: "functions/functions-mail.php.j2"
-#    dest: "{{ phpipam_root }}/functions/functions-mail.php"
-#    owner: "{{ phpipam_web_owner }}"
-#    group: "{{ phpipam_web_group }}"
-#  when: >
-#        phpipam_patch_email is defined and
-#        phpipam_patch_email
+# - name: config_phpipam | patching email
+#   ansible.builtin.template:
+#     src: "functions/functions-mail.php.j2"
+#     dest: "{{ phpipam_root }}/functions/functions-mail.php"
+#     owner: "{{ phpipam_web_owner }}"
+#     group: "{{ phpipam_web_group }}"
+#   when: >
+#         phpipam_patch_email is defined and
+#         phpipam_patch_email
 #
 ## need to validate this is still needed as versions change
-#- name: config_phpipam | patching email
-#  ansible.builtin.template:
-#    src: "site/admin/mailSettingsTestMail.php.j2"
-#    dest: "{{ phpipam_root }}/site/admin/mailSettingsTestMail.php"
-#    owner: "{{ phpipam_web_owner }}"
-#    group: "{{ phpipam_web_group }}"
-#  when: >
-#        phpipam_patch_email is defined and
-#        phpipam_patch_email
+# - name: config_phpipam | patching email
+#   ansible.builtin.template:
+#     src: "site/admin/mailSettingsTestMail.php.j2"
+#     dest: "{{ phpipam_root }}/site/admin/mailSettingsTestMail.php"
+#     owner: "{{ phpipam_web_owner }}"
+#     group: "{{ phpipam_web_group }}"
+#   when: >
+#         phpipam_patch_email is defined and
+#         phpipam_patch_email
 #
 ## need to validate this is still needed as versions change
-#- name: config_phpipam | adding dnsCheck.php script
-#  ansible.builtin.template:
-#    src: "functions/scripts/dnsCheck.php.j2"
-#    dest: "{{ phpipam_root }}/functions/scripts/dnsCheck.php"
-#    owner: "{{ phpipam_web_owner }}"
-#    group: "{{ phpipam_web_group }}"
-#    mode: 0755
-#  when: >
-#        phpipam_patch_discovery is defined and
-#        phpipam_patch_discovery
+# - name: config_phpipam | adding dnsCheck.php script
+#   ansible.builtin.template:
+#     src: "functions/scripts/dnsCheck.php.j2"
+#     dest: "{{ phpipam_root }}/functions/scripts/dnsCheck.php"
+#     owner: "{{ phpipam_web_owner }}"
+#     group: "{{ phpipam_web_group }}"
+#     mode: 0755
+#   when: >
+#         phpipam_patch_discovery is defined and
+#         phpipam_patch_discovery
 #
 ## need to validate this is still needed as versions change
-#- name: config_phpipam | checking for fping path
-#  ansible.builtin.command: which fping
-#  register: fping_path
-#  changed_when: false
+# - name: config_phpipam | checking for fping path
+#   ansible.builtin.command: which fping
+#   register: fping_path
+#   changed_when: false
 #
 ## need to validate this is still needed as versions change
-#- name: config_phpipam | adding fpingDiscovery script(s)
-#  ansible.builtin.template:
-#    src: "functions/scripts/{{ item }}.j2"
-#    dest: "{{ phpipam_root }}/functions/scripts/{{ item }}"
-#    owner: "{{ phpipam_web_owner }}"
-#    group: "{{ phpipam_web_group }}"
-#    mode: 0755
-#  with_items:
-#    - fpingDiscoveryCheck.php
-#    - fpingThread.php
-#  when: >
-#        phpipam_patch_discovery is defined and
-#        phpipam_patch_discovery
+# - name: config_phpipam | adding fpingDiscovery script(s)
+#   ansible.builtin.template:
+#     src: "functions/scripts/{{ item }}.j2"
+#     dest: "{{ phpipam_root }}/functions/scripts/{{ item }}"
+#     owner: "{{ phpipam_web_owner }}"
+#     group: "{{ phpipam_web_group }}"
+#     mode: 0755
+#   with_items:
+#     - fpingDiscoveryCheck.php
+#     - fpingThread.php
+#   when: >
+#         phpipam_patch_discovery is defined and
+#         phpipam_patch_discovery
 #
-#- name: config_phpipam | Ensuring Permissions Are Correctly Set
-#  ansible.builtin.file:
-#    path: "{{ phpipam_root }}"
-#    group: "{{ phpipam_web_group }}"
-#    owner: "{{ phpipam_web_owner }}"
-#    state: "directory"
-#    recurse: yes
-#  when: phpipam_install_from_git # Only run when is not coming from git
+# - name: config_phpipam | Ensuring Permissions Are Correctly Set
+#   ansible.builtin.file:
+#     path: "{{ phpipam_root }}"
+#     group: "{{ phpipam_web_group }}"
+#     owner: "{{ phpipam_web_owner }}"
+#     state: "directory"
+#     recurse: yes
+#   when: phpipam_install_from_git # Only run when is not coming from git
 
 - name: Config_phpipam | Ensuring Permissions Are Correctly Set
   ansible.builtin.file:
@@ -169,19 +169,18 @@
     state: "directory"
     recurse: true
 
-
-#- name: Adding cron job for discoveryCheck
-#  ansible.builtin.cron:
-#    name: phpipam discoveryCheck
-#    job: "/usr/bin/php {{ phpipam_root }}/functions/scripts/discoveryCheck.php"
-#    minute: "*/15"
-#    hour: "*"
-#    day: "*"
-#    month: "*"
-#    user: "{{ phpipam_web_owner }}"
-#    cron_file: phpipam_discoveryCheck
-#    state: present
-#  when: phpipam_define_cron_jobs
+# - name: Adding cron job for discoveryCheck
+#   ansible.builtin.cron:
+#     name: phpipam discoveryCheck
+#     job: "/usr/bin/php {{ phpipam_root }}/functions/scripts/discoveryCheck.php"
+#     minute: "*/15"
+#     hour: "*"
+#     day: "*"
+#     month: "*"
+#     user: "{{ phpipam_web_owner }}"
+#     cron_file: phpipam_discoveryCheck
+#     state: present
+#   when: phpipam_define_cron_jobs
 
 - name: Ading cron job for pingCheck
   ansible.builtin.cron:
@@ -196,15 +195,15 @@
     state: present
   when: phpipam_define_cron_jobs
 
-#- name: Aadding cron job for resolveIPaddresses
-#  ansible.builtin.cron:
-#    name: phpipam resolveIPaddresses
-#    job: "/usr/bin/php {{ phpipam_root }}/functions/scripts/resolveIPaddresses.php"
-#    minute: "0"
-#    hour: "*"
-#    day: "*"
-#    month: "*"
-#    user: "{{ phpipam_web_owner }}"
-#    cron_file: phpipam_resolveIPaddresses
-#    state: present
-#  when: phpipam_define_cron_jobs
+# - name: Aadding cron job for resolveIPaddresses
+#   ansible.builtin.cron:
+#     name: phpipam resolveIPaddresses
+#     job: "/usr/bin/php {{ phpipam_root }}/functions/scripts/resolveIPaddresses.php"
+#     minute: "0"
+#     hour: "*"
+#     day: "*"
+#     month: "*"
+#     user: "{{ phpipam_web_owner }}"
+#     cron_file: phpipam_resolveIPaddresses
+#     state: present
+#   when: phpipam_define_cron_jobs
