@@ -3,8 +3,7 @@
 [![Galaxy Role](https://img.shields.io/badge/galaxy-apps_phpipam-purple?style=flat)](https://galaxy.ansible.com/lotusnoir/apps_phpipam)
 [![Version](https://img.shields.io/github/release/lotusnoir/ansible-apps_phpipam.svg)](https://github.com/lotusnoir/ansible-apps_phpipam/releases/latest)
 [![GitHub repo size](https://img.shields.io/github/repo-size/lotusnoir/ansible-apps_phpipam?color=orange&style=flat)](https://galaxy.ansible.com/lotusnoir/apps_phpipam)
-[![downloads](https://img.shields.io/ansible/role/d/52262)](https://galaxy.ansible.com/lotusnoir/apps_phpipam)
-[![Ansible Quality Score](https://img.shields.io/ansible/quality/52262)](https://galaxy.ansible.com/lotusnoir/apps_phpipam)
+[![downloads](https://img.shields.io/ansible/role/d/lotusnoir/apps_phpipam)](https://galaxy.ansible.com/lotusnoir/apps_phpipam)
 [![License](https://img.shields.io/badge/license-Apache--2.0-brightgreen?style=flat)](https://opensource.org/licenses/Apache-2.0)
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
@@ -25,7 +24,8 @@ Deploy and install the ipam web tool [phpipam](https://github.com/momorientes/ph
 
 ## Requirements
 
-['geerlingguy.mysql', 'geerlingguy.nginx']
+- geerlingguy.mysql
+- geerlingguy.nginx
 
 ## Role variables
 
